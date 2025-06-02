@@ -13,7 +13,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://jobs-searching-system.vercel.app"]}})
 
 folder_path = "db"
 
@@ -132,7 +132,7 @@ def pdfPost():
 
 
 def start_app():
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)
 
 
 if __name__ == "__main__":
