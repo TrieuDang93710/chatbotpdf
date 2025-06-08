@@ -13,12 +13,11 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://jobs-searching-system.vercel.app"]}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://jobs-searching-system.vercel.app", "https://job-searching-nextjs-app-1-0-2.onrender.com"]}})
 
 folder_path = "db"
 
-cached_llm = Ollama(model="llama3.2:latest")
-# cached_llm = Ollama(model="llama3")
+cached_llm = Ollama(model="llama3.2:latest", base_url="http://host.docker.internal:11434")
 
 embedding = FastEmbedEmbeddings()
 
@@ -28,14 +27,15 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 raw_prompt = PromptTemplate.from_template(
     """ 
-    <s>[INST] You are a technical assistant good at searching docuemnts. If you do not have an answer from the provided information say so. [/INST] </s>
+    <s>[INST] You are a technical assistant good at 
+    searching docuemnts. If you do not have an answer from the provided information say so. 
+    [/INST] </s>
     [INST] {input}
            Context: {context}
            Answer:
     [/INST]
 """
 )
-
 
 @app.route("/ai", methods=["POST"])
 def aiPost():
@@ -53,10 +53,8 @@ def aiPost():
         "query": query, 
         "answer": response,
         "createAt": datetime.now()
-
     }
     return response_answer
-
 
 @app.route("/ask_pdf", methods=["POST"])
 def askPDFPost():
@@ -99,7 +97,6 @@ def askPDFPost():
     }
     return response_answer
 
-
 @app.route("/pdf", methods=["POST"])
 def pdfPost():
     print('request: ', request.files)
@@ -130,10 +127,8 @@ def pdfPost():
     }
     return response
 
-
 def start_app():
-    app.run(host="0.0.0.0", port=8000, debug=True)
-
+    app.run(host="0.0.0.0", port=8000, debug=False)
 
 if __name__ == "__main__":
     start_app()

@@ -1,12 +1,18 @@
-# Sử dụng image Python chính thức
-FROM python:3.10
+FROM python:3.11-slim
 
 WORKDIR /app
 
+# Copy project files
 COPY . .
 
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Ollama (nếu cần)
+RUN pip install langchain-ollama langchain_chroma langchain_community langchain
+
+# Expose port
 EXPOSE 8000
 
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
+# Run the application
+CMD ["python", "app.py"]
